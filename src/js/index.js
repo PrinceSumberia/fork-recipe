@@ -1,9 +1,39 @@
 // Global app controller
-console.log("Connected");
+import Search from "./models/Search";
+import * as searchView from "./views/searchView";
+import { elements } from "./views/base";
 
-// 371dfa06eaf39a2f9894ff6076d3bb8a
-// https://www.food2fork.com/api/search
+/** Global state of the app
+ * - Search object
+ * - Current recipe object
+ * - Shopping list object
+ * - Liked recipe
+**/
 
-async function getResults(query) {
+const state = {};
 
+const controlSearch = async () => {
+    // Get the query from view
+    const query = searchView.getInput();
+
+    if (query) {
+        // New serach object and add to state
+        state.search = new Search(query);
+
+        // Prepare UI for results
+        searchView.clearInput();
+        searchView.clearResults();
+
+        // Search for recipies
+        await state.search.getResults();
+
+        // Render results on UI
+        searchView.renderResults(state.search.result);
+    }
 }
+
+elements.searchForm.addEventListener('submit', event => {
+    event.preventDefault();
+    controlSearch();
+});
+
