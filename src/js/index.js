@@ -105,10 +105,7 @@ elements.shopping.addEventListener('click', e => {
         const val = parseFloat(e.target.value, 10);
         state.list.updateCount(id, val);
     }
-})
-
-state.likes = new Likes();
-likesView.toggleLikeMenu(state.likes.getNumLikes());
+});
 
 
 const controlLike = () => {
@@ -132,7 +129,14 @@ const controlLike = () => {
         likesView.deleteLike(currentID);
     }
     likesView.toggleLikeMenu(state.likes.getNumLikes());
-}
+};
+
+window.addEventListener('load', () => {
+    state.likes = new Likes();
+    state.likes.readStorage()
+    likesView.toggleLikeMenu(state.likes.getNumLikes());
+    state.likes.likes.forEach(like => likesView.renderLike(like));
+})
 
 elements.recipe.addEventListener('click', (event) => {
     if (event.target.matches('.btn-decrease, .btn-decrease *')) {
